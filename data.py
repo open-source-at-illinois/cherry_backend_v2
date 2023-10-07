@@ -6,6 +6,12 @@ import pandas as pd
 # course_data = pd.read_csv('courses_2021_desc.csv')
 course_data = pd.read_csv('courses_2021_desc.csv')
 
+# This is a very messy function
+# What it tries to do is extract course data based on a number of variables
+# Geneds: If you put in a gened requirement it will filter on that requirement
+# Depts: It will get courses for specific departments
+# Query: If you input a search query it will return that course
+# Sort Order: Orders how you want the data to be filtered
 def parse_courses(page, geneds, depts, query, sort_order):
     if len(geneds) == 0:
         pass
@@ -38,4 +44,11 @@ def number_of_courses():
 
 def number_of_pages():
     return math.ceil(number_of_courses()/100)
-    
+
+#TODO:
+
+# Completely Change this file
+
+# Use it as an interface between an SQL / MySQL database instead of calling pandas to read from a csv
+
+# In its currrent state we want better filtering and searching methods so we can set it up easier

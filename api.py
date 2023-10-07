@@ -29,3 +29,21 @@ def json_number_of_courses():
 @app.route('/2021/number_of_pages')
 def json_number_of_pages():
    return jsonify(number_of_pages())
+
+#TODO:
+
+# Create a route that will display information about a specific course when you get it
+
+# Create a route that will display specific information about courses in a department
+
+# Create a route that will filter courses based on total size
+
+# Create a route that will retrieve courses taught by a specific instructor
+
+# Create a route that will display all the geneds
+
+# Create a route that will display a gened of a specific category
+
+# Create a route that will filter by department + gpa
+
+# Sort all the different routes into seperate files
