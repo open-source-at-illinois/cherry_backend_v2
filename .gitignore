@@ -1,4 +1,5 @@
 venv
+newenv
 __pycache__/api.cpython-311.pyc
 __pycache__/app.cpython-311.pyc
 __pycache__/data.cpython-311.pyc
