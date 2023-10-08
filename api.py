@@ -12,15 +12,27 @@ app = Flask(__name__)
 
 @app.route('/2021/courses_by_gpa/<page_number>')
 def courses_by_gpa(page_number):
-   return parse_courses(page_number, '', '', '', 'gpa').to_json(orient='records')
+   try:
+      course_list = parse_courses(page_number, '', '', '', 'GPA').to_json(orient='records')
+      return course_list
+   except AttributeError:  # should probably find a better way to do this, could hide actual AttributeErrors 
+      return 'Bad request!', 400
 
 @app.route('/2021/courses_by_name/<page_number>')
 def courses_by_name(page_number):
-   return parse_courses(page_number, '', '', '', 'Course Name').to_json(orient='records')
+   try:   
+      course_list = parse_courses(page_number, '', '', '', 'Course Name').to_json(orient='records')
+      return course_list
+   except AttributeError:
+      return 'Bad request!', 400
 
 @app.route('/2021/courses_by_size/<page_number>')
 def courses_by_size(page_number):
-   return parse_courses(page_number, '', '', '', 'size').to_json(orient='records')
+   try:
+      course_list = parse_courses(page_number, '', '', '', 'size').to_json(orient='records')
+      return course_list
+   except AttributeError:
+      return 'Bad request!', 400
 
 @app.route('/2021/number_of_courses')
 def json_number_of_courses():
