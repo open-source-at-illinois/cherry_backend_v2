@@ -47,6 +47,21 @@ def number_of_courses():
 def number_of_pages():
     return math.ceil(number_of_courses()/100)
 
+def get_courses_by_schedule_type(page, course_types):
+    
+    if (int(page) < 0):
+        return (0, [])
+    
+    try:
+        course_list = course_data[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size', 'Sched Type']]
+
+        course_list = course_list[course_list['Sched Type'].apply(lambda x: x in course_types)]
+        
+        course_list = course_list.iloc[int(page)*100:int(page)*100+100]
+        return course_list
+    except KeyError:
+        return (0, [])
+
 #TODO:
 
 # Completely Change this file

@@ -2,9 +2,9 @@
 # Written in python using flask to perform API calls
 
 import importlib
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 # Grab the course data from the data.py processing script
-from data import parse_courses, number_of_courses, number_of_pages
+from data import parse_courses, number_of_courses, number_of_pages, get_courses_by_schedule_type
 # moduleName = input('utils')
 # importlib.import_module(utils)
 
@@ -41,6 +41,15 @@ def json_number_of_courses():
 @app.route('/2021/number_of_pages')
 def json_number_of_pages():
    return jsonify(number_of_pages())
+
+@app.route('/2021/courses_by_schedule_type/<page_number>')
+def courses_by_type(page_number):
+   try:
+      schedule_type = request.args.get('schedule_type', '')
+      course_list = get_courses_by_schedule_type(page_number, [schedule_type]).to_json(orient='records')
+      return course_list
+   except AttributeError:
+      return 'Bad request!', 400
 
 #TODO:
 
