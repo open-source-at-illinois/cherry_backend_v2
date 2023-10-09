@@ -12,7 +12,7 @@ course_data = pd.read_csv('courses_2021_desc.csv')
 # Depts: It will get courses for specific departments
 # Query: If you input a search query it will return that course
 # Sort Order: Orders how you want the data to be filtered
-def parse_courses(page, geneds, depts, query, sort_order):
+def parse_courses(page, geneds, depts, query, schedule_types, sort_order):
 
     if(int(page) < 0):
         return (0, [])
@@ -20,7 +20,7 @@ def parse_courses(page, geneds, depts, query, sort_order):
     # sort courses by sort_order
 
     try:
-        course_list = course_data[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size']]
+        course_list = course_data[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size', 'Sched Type']]
 
         for gened in geneds:
             course_list = course_list[course_list['geneds'].apply(lambda x: gened in x)]
@@ -31,6 +31,9 @@ def parse_courses(page, geneds, depts, query, sort_order):
         if depts:
             course_list = course_list[course_list['dept'].apply(lambda x: x in depts)]
 
+        if schedule_types and len(schedule_types):
+            schedule_type_list = schedule_types.split(",")
+            course_list = course_list[course_list['Sched Type'].apply(lambda x: x in schedule_type_list)]
 
         course_list = course_list.sort_values(by=[sort_order], ascending=False)
 
@@ -46,21 +49,6 @@ def number_of_courses():
 
 def number_of_pages():
     return math.ceil(number_of_courses()/100)
-
-def get_courses_by_schedule_type(page, course_types):
-    
-    if (int(page) < 0):
-        return (0, [])
-    
-    try:
-        course_list = course_data[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size', 'Sched Type']]
-
-        course_list = course_list[course_list['Sched Type'].apply(lambda x: x in course_types)]
-        
-        course_list = course_list.iloc[int(page)*100:int(page)*100+100]
-        return course_list
-    except KeyError:
-        return (0, [])
 
 #TODO:
 
