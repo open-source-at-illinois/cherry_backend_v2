@@ -1,5 +1,6 @@
 # This file contains the data processing side for the CSV file, transforming it into arrays for the API
 
+from flask import request
 import math
 import pandas as pd
 
@@ -46,6 +47,40 @@ def number_of_courses():
 
 def number_of_pages():
     return math.ceil(number_of_courses()/100)
+
+def fetch_courses_by_instructor():
+    # validate that professor is passed
+    if not request.get_json()["instructor"]:
+        return 'Bad request!', 400
+    else:
+        instructor = request.get_json()["instructor"]
+
+    # load page, geneds, and sort_order if given
+    page = 0 if "page" not in request.get_json() else request.get_json()["page"]
+    geneds = [] if "geneds" not in request.get_json() else request.get_json()["geneds"]
+    sort_order = "" if "sort_order" not in request.get_json() else request.get_json()["sort_order"]
+
+    
+    course_list = course_data[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size', "Primary Instructor", "Instructor"]]
+    try:
+        # load instructor's classes
+        course_list = course_list[
+            course_list['Instructor'].str.contains(instructor, na=False)
+            ]
+        
+        # load geneds
+        for gened in geneds:
+                course_list = course_list[course_list['geneds'].apply(lambda x: gened in x)]
+
+        # sort
+        if sort_order != "":
+            course_list = course_list.sort_values(by=[sort_order], ascending=False)
+
+        return course_list[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size']].to_json(orient="records")
+    except KeyError:
+        return 'Bad request! Key Error', 400
+
+
 
 #TODO:
 

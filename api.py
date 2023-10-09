@@ -2,9 +2,9 @@
 # Written in python using flask to perform API calls
 
 import importlib
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 # Grab the course data from the data.py processing script
-from data import parse_courses, number_of_courses, number_of_pages
+from data import parse_courses, number_of_courses, number_of_pages, fetch_courses_by_instructor
 # moduleName = input('utils')
 # importlib.import_module(utils)
 
@@ -51,6 +51,9 @@ def json_number_of_pages():
 # Create a route that will filter courses based on total size
 
 # Create a route that will retrieve courses taught by a specific instructor
+@app.route('/2021/courses_by_instructor')
+def get_courses_by_instructor():
+   return jsonify(fetch_courses_by_instructor())
 
 # Create a route that will display all the geneds
 
