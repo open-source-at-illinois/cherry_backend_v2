@@ -2,9 +2,12 @@
 
 import math
 import pandas as pd
+import numpy as np
 
 # course_data = pd.read_csv('courses_2021_desc.csv')
 course_data = pd.read_csv('courses_2021_desc.csv')
+course_data.replace(np.nan, '')
+course_data.fillna("", inplace=True)
 
 # This is a very messy function
 # What it tries to do is extract course data based on a number of variables
@@ -12,6 +15,14 @@ course_data = pd.read_csv('courses_2021_desc.csv')
 # Depts: It will get courses for specific departments
 # Query: If you input a search query it will return that course
 # Sort Order: Orders how you want the data to be filtered
+def search(**kwargs):
+    output = course_data[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size', 'Instructor']]
+    for key, value in kwargs.items():
+        key = key.replace("_", " ")
+        output = output[output[key].str.contains(value)]
+    return output
+
+
 def parse_courses(page, geneds, depts, query, sort_order):
 
     if(int(page) < 0):
