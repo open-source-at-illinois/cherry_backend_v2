@@ -2,7 +2,7 @@
 # Written in python using flask to perform API calls
 
 import importlib
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 # Grab the course data from the data.py processing script
 from data import parse_courses, number_of_courses, number_of_pages
 # moduleName = input('utils')
@@ -13,15 +13,17 @@ app = Flask(__name__)
 @app.route('/2021/courses_by_gpa/<page_number>')
 def courses_by_gpa(page_number):
    try:
-      course_list = parse_courses(page_number, '', '', '', 'GPA').to_json(orient='records')
+      schedule_types = request.args.get('schedule_types', '')
+      course_list = parse_courses(page_number, '', '', '', schedule_types, 'GPA').to_json(orient='records')
       return course_list
    except AttributeError:  # should probably find a better way to do this, could hide actual AttributeErrors 
       return 'Bad request!', 400
 
 @app.route('/2021/courses_by_name/<page_number>')
 def courses_by_name(page_number):
-   try:   
-      course_list = parse_courses(page_number, '', '', '', 'Course Name').to_json(orient='records')
+   try:
+      schedule_types = request.args.get('schedule_types', '')
+      course_list = parse_courses(page_number, '', '', '', schedule_types, 'Course Name').to_json(orient='records')
       return course_list
    except AttributeError:
       return 'Bad request!', 400
@@ -29,7 +31,8 @@ def courses_by_name(page_number):
 @app.route('/2021/courses_by_size/<page_number>')
 def courses_by_size(page_number):
    try:
-      course_list = parse_courses(page_number, '', '', '', 'size').to_json(orient='records')
+      schedule_types = request.args.get('schedule_types', '')
+      course_list = parse_courses(page_number, '', '', '', schedule_types, 'size').to_json(orient='records')
       return course_list
    except AttributeError:
       return 'Bad request!', 400
