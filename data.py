@@ -319,7 +319,7 @@ def parse_courses_by_criteria_dictionary(criteria_dictionary: dict, page_number:
 
     course_list = course_list.iloc[first_index_of_page:last_index_of_page]
 
-    return (course_list, final_length, highest_page_index, page_number)
+    return (course_list, len(course_list), final_length, highest_page_index, page_number)
 
 '''
 ##### TESTING/EXAMPLE CODE #####
