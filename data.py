@@ -123,6 +123,7 @@ def parse_courses_by_course_name(name: str, data: pd.DataFrame = course_data):
 
     return output_data
 
+
 # RETURN: Filtered Dataframe of courses whose course level matches the range of levels given
 #   * Can find course of a specific level by putting in min and max of equal level.
 # INPUT min_level: Default 100. Minimum bound of level of the courses returned in hundreds.
@@ -150,6 +151,7 @@ def parse_courses_by_class_sizes(min_size: int = 0, max_size: int = 2500, data: 
     output_data = output_data.reset_index(drop=True)
 
     return output_data
+
 
 # HELPER FUNCTION OF parse_courses_by_criteria_dictionary
 # RETURN: Criteria data defined by the keys passed in.
@@ -385,57 +387,3 @@ print(parse_courses_by_criteria_dictionary(test_dict_5, -1)) # Out of bounds
 
 
 '''
-
-# This is a very messy function
-# What it tries to do is extract course data based on a number of variables
-# Geneds: If you put in a gened requirement it will filter on that requirement
-# Depts: It will get courses for specific departments
-# Query: If you input a search query it will return that course
-# Sort Order: Orders how you want the data to be filtered
-### DEPRECATED ###
-def parse_courses(page, geneds, depts, query, sort_order):
-
-    if(int(page) < 0):
-        return (0, [])
-        
-    # sort courses by sort_order
-
-    try:
-        course_list = raw_data[['Course Name', 'GPA', 'Course Number', 'geneds', 'dept', 'size']]
-
-        for gened in geneds:
-            course_list = course_list[course_list['geneds'].apply(lambda x: gened in x)]
-
-        if query and len(query):
-            course_list = course_list[course_list['Course Name'].apply(lambda x: query.lower() in x.lower())]
-
-        if depts:
-            course_list = course_list[course_list['dept'].apply(lambda x: x in depts)]
-
-
-        course_list = course_list.sort_values(by=[sort_order], ascending=False)
-
-        total = len(course_list)
-
-        course_list = course_list.iloc[int(page)*100:int(page)*100+100]
-        return (total, course_list)
-    except KeyError:
-        return (0, [])
-    
-def number_of_courses():
-    return len(course_data.index)
-
-def number_of_pages():
-    return math.ceil(number_of_courses()/100)
-
-#TODO:
-
-# Completely Change this file
-
-# Use it as an interface between an SQL / MySQL database instead of calling pandas to read from a csv
-
-# In its currrent state we want better filtering and searching methods so we can set it up easier
-
-# Instructor Name Filter
-# CRN Filter
-# Course Title Filter
