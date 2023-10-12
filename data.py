@@ -29,7 +29,7 @@ def parse_courses_by_all_geneds(geneds: list, data: pd.DataFrame = course_data):
 # INPUT geneds: Required field. List of gen-eds in abbreviated, all-caps format of type str.
 # INPUT data: Default is the global course_data DataFrame. DataFrame to be filtered.
 def parse_courses_by_geneds(geneds: list, data: pd.DataFrame = course_data):
-    output_data = pd.DataFrame()
+    output_data = pd.DataFrame(columns = ['dept', 'Number', 'Course Name', 'Number of Credits', 'Primary Instructor', 'GPA', 'geneds','size'])
 
     for gened in geneds:
         # Every iteration appends classes that satisfy gened from geneds
@@ -277,24 +277,28 @@ def parse_courses_by_criteria_dictionary(criteria_dictionary: dict, page_number:
 
 
     # Sort based on extracted sort_by and sort_ascending
-    match sort_by:
-        case None:
-            course_list = course_list.sort_values(by = ['GPA'], ascending = sort_ascending)
+    try:
+        match sort_by:
+            case None:
+                course_list = course_list.sort_values(by = ['GPA'], ascending = sort_ascending)
 
-        case 'Course Name':
-            course_list = course_list.sort_values(by = ['Course Name'], ascending = sort_ascending)
-            
-        case 'dept':
-            course_list = course_list.sort_values(by = ['dept'], ascending = sort_ascending)
+            case 'Course Name':
+                course_list = course_list.sort_values(by = ['Course Name'], ascending = sort_ascending)
+                
+            case 'dept':
+                course_list = course_list.sort_values(by = ['dept'], ascending = sort_ascending)
 
-        case 'Number':
-            course_list = course_list.sort_values(by = ['Number'], ascending = sort_ascending)
+            case 'Number':
+                course_list = course_list.sort_values(by = ['Number'], ascending = sort_ascending)
 
-        case 'size':
-            course_list = course_list.sort_values(by = ['size'], ascending = sort_ascending)
+            case 'size':
+                course_list = course_list.sort_values(by = ['size'], ascending = sort_ascending)
 
-        case _:
-            course_list = course_list.sort_values(by = ['GPA'], ascending = sort_ascending)
+            case _:
+                course_list = course_list.sort_values(by = ['GPA'], ascending = sort_ascending)
+    except KeyError:
+        # Catch sorting errors sometimes when dataframe is empty
+        return (pd.DataFrame(columns = ['dept', 'Number', 'Course Name', 'Number of Credits', 'Primary Instructor', 'GPA', 'geneds','size']), 0, 0, 0, page_number)
 
     # Reset the indexing of the dataframe
     course_list = course_list.reset_index(drop=True)
@@ -307,11 +311,11 @@ def parse_courses_by_criteria_dictionary(criteria_dictionary: dict, page_number:
 
     if page_number < 0:
         # If negative page number is asked for, still give the other info
-        return (pd.DataFrame(), 0, final_length, highest_page_index, page_number)
+        return (pd.DataFrame(columns = ['dept', 'Number', 'Course Name', 'Number of Credits', 'Primary Instructor', 'GPA', 'geneds','size']), 0, final_length, highest_page_index, page_number)
 
     if first_index_of_page > final_length:
         # If the first index requested is out of bounds, the page number was too high
-        return (pd.DataFrame(), 0, final_length, highest_page_index, page_number)
+        return (pd.DataFrame(columns = ['dept', 'Number', 'Course Name', 'Number of Credits', 'Primary Instructor', 'GPA', 'geneds','size']), 0, final_length, highest_page_index, page_number)
 
     if last_index_of_page > final_length:
         # If the last index requested is out of bounds, adjust it down to the bounds
