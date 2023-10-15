@@ -2,13 +2,27 @@
 # Written in python using flask to perform API calls
 
 import importlib
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 # Grab the course data from the data.py processing script
 from data import parse_courses, number_of_courses, number_of_pages
 # moduleName = input('utils')
 # importlib.import_module(utils)
 
 app = Flask(__name__)
+
+# Multiple queries
+# Example: http://127.0.0.1:8080/2021/courses?page=0&name=intro&geneds=NWC&geneds=HA&dept=REL
+@app.route('/2021/courses')
+def courses_from_parameters():
+   page_number = request.args.get('page', default=0, type=int)
+   course_name = request.args.get('name', default='', type=str)
+   geneds = request.args.getlist('geneds', type=str)
+   dept = request.args.getlist('dept', type=str)
+   try:
+      course_list = parse_courses(page_number, geneds, dept, course_name, 'Course Name').to_json(orient='records')
+      return course_list
+   except AttributeError:
+      return 'Bad request!', 400
 
 @app.route('/2021/courses_by_gpa/<page_number>')
 def courses_by_gpa(page_number):

@@ -12,7 +12,7 @@ course_data = pd.read_csv('courses_2021_desc.csv')
 # Depts: It will get courses for specific departments
 # Query: If you input a search query it will return that course
 # Sort Order: Orders how you want the data to be filtered
-def parse_courses(page, geneds, depts, query, sort_order):
+def parse_courses(page=0, geneds=[], depts=[], query='', sort_order='Course Name'):
 
     if(int(page) < 0):
         return (0, [])
